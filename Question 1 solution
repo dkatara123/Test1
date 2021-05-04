@@ -1,38 +1,48 @@
-1) Sol :
-
-We need to create 3 seperate service file each for 1 service and 
-It will be in the below format .
-
-
-a) [Unit]
-Description=Web service
-After=app-service
-
-[Service]
-<Service file configuration>
-
-[Install]
-WantedBy=multi-user.target
-
-
-
-
-b) [Unit]
-Description=app service
-After=db-service
-
-[Service]
-<Service file configuration>
-
-[Install]
-WantedBy=multi-user.target
-
-
-c) [Unit]
-Description=db service
-
-[Service]
-<Service file configuration>
-
-[Install]
-WantedBy=multi-user.target
+---
+- name: Restart Services
+  hosts: "{{ IP_LIST }}"
+  become: true
+  become_method: sudo
+  become_user: root
+  gather_facts: false
+  
+  tasks:
+  
+    - set_fact:
+        service_name: "{{ input }}"
+  
+    - name: Restart db_service
+      service:
+        name: db_service
+        state: restarted
+      when: "'db_service' in service_name"
+      
+      notify:
+        - Restart app_service
+        - Restart web_service
+      
+    - name: Restart app_service
+      service:
+        name: app_service
+        state: restarted
+      when: "'app_service' in service_name"
+      
+      notify:
+        - Restart web_service
+        
+    - name: Restart web_service
+      service:
+        name: web_service
+        state: restarted
+      when: "'web_service' in service_name"
+      
+  handlers:
+       - name: Restart app_service
+         service:
+           name: app_service
+           state: restarted
+           
+       - name: Restart web_service
+         service:
+           name: web_service
+           state: restarted
