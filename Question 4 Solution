@@ -14,7 +14,7 @@ $ terraform init
 6- Deploy the virtual machine.
 $ terraform apply
 
-Configure file or terraform .tf file used that will be used for creating VM & database
+Configure file or terraform .tf file ( Clone from repo) used that will be used for creating VM & database
 
 
 provider "vsphere" {
