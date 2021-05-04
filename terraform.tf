@@ -1,4 +1,4 @@
-rovider "vsphere" {
+provider "vsphere" {
   user           = "admin"
   password       = "Iwiiap@13ns"
   vsphere_server = "10.241.110.12"
